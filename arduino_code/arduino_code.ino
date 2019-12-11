@@ -20,12 +20,10 @@ void loop() {
   
   if (serial_string.length() >0)
   {
-    Serial.print("Readings on sensor id: ");  
-    Serial.print(serial_string);
     if (serial_string.toInt() == 1){
-      digitalWrite(13, HIGH);
-    } else if(serial_string.toInt() == 10) {
-      digitalWrite(13, LOW);
+      Serial.print(analogRead(A5));
     }
+
+  
   } 
 }
