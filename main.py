@@ -1,35 +1,48 @@
 import serial
 import time
 from sys import exit
+
 serialPort = serial.Serial(port = "/dev/ttyACM0", baudrate=9600,
                            bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 
-serialStirng = ""
-print("Starting communication")
-time.sleep(2)
-if(serialPort.in_waiting > 0):
-	while serialPort.in_waiting > 0:
-		serialString = serialPort.readline()
-		# print(serialString)
-		print(serialString.decode('ASCII'))
+def getReading(sensor_id):
+	try:
+		sensor_id += "\n"
+		b = sensor_id.encode('ASCII')
+		serialPort.write(b)
+
+		time.sleep(1)
+		if(serialPort.in_waiting > 0):
+			while serialPort.in_waiting > 0:
+				serialString = serialPort.readline()
+				# print(serialString)
+				return serialString.decode('ASCII')
+	except Exception as e:
+		return e
+
+def readBuffer():
+	time.sleep(2)
+	if(serialPort.in_waiting > 0):
+		while serialPort.in_waiting > 0:
+			serialString = serialPort.readline()
+			# print(serialString)
+			print(serialString.decode('ASCII'))
 try:
-		while True:
-			time.sleep(1)
-			if(serialPort.in_waiting > 0):
-				while serialPort.in_waiting > 0:
-					serialString = serialPort.readline()
-					# print(serialString)
-					print(serialString.decode('ASCII'))
+	readBuffer()
+	
+	while True:
+		
 
-			send_string = input(">>> ")
-			if send_string == "q" or send_string=="exit":
-				print("Exiting. Goodbye!")
-				serialPort.close()
-				exit()
+		sensor_id = input(">>> ")
+		if sensor_id == "q" or sensor_id=="exit":
+			print("Exiting. Goodbye!")
+			serialPort.close()
+			exit()
+		elif sensor_id != "":
+			print(getReading(sensor_id))
 
-			send_string += "\n"
-			b = send_string.encode('ASCII')
-			serialPort.write(b)
+	
+
 
 except KeyboardInterrupt:
 	print("Keyboard Interrupt") 
