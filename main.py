@@ -1,45 +1,37 @@
 import serial
 import time
 from sys import exit
+from models import Arduino, Sensor
 
-serialPort = serial.Serial(port = "/dev/ttyACM0", baudrate=9600,
-                           bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
 
-def getReading(sensor_id):
-	try:
-		sensor_id += "\n"
-		b = sensor_id.encode('ASCII')
-		serialPort.write(b)
-
-		time.sleep(1)
-		if(serialPort.in_waiting > 0):
-			while serialPort.in_waiting > 0:
-				serialString = serialPort.readline()
-				# print(serialString)
-				return serialString.decode('ASCII')
-	except Exception as e:
-		return e
-
-def readBuffer():
-	time.sleep(2)
-	if(serialPort.in_waiting > 0):
-		while serialPort.in_waiting > 0:
-			serialString = serialPort.readline()
-			# print(serialString)
-			print(serialString.decode('ASCII'))
 try:
-	readBuffer()
-	
-	while True:
-		
+	arduino = Arduino()
+except Exception as e:
+	print(e)
+	exit()
 
-		sensor_id = input(">>> ")
-		if sensor_id == "q" or sensor_id=="exit":
-			print("Exiting. Goodbye!")
-			serialPort.close()
+try:
+	ldrs = []
+	ldrs.append(Sensor(1, arduino))
+	ldrs.append(Sensor(2, arduino))
+	
+except Exception as e:
+	print("Error occured creating sensor")
+
+
+try:	
+	time.sleep(1)
+	print(arduino.readBuffer())
+	while True:
+		req_id = int(input(">>> "))
+		if req_id == 0:
+			arduino.closeConnection()
 			exit()
-		elif sensor_id != "":
-			print(getReading(sensor_id))
+		for ldr in ldrs:
+			if ldr.uid == req_id:
+				print(ldr.getReading())		
+		
+		
 
 	
 
@@ -48,4 +40,4 @@ except KeyboardInterrupt:
 	print("Keyboard Interrupt") 
 
 finally:
-	serialPort.close()
+	arduino.closeConnection()
