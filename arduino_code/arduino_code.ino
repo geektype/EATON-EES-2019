@@ -5,11 +5,12 @@ int sensors[2] = {A5,A4};
 
 
 void setup() {
-  // put your setup code here, to run once:
+  // Start Serial Connection
   Serial.begin(9600);
 
   Serial.print("Arduino Ready to recieve");
 
+  //Initialise all if the pins as input
   for (int i = 0; i < sizeof(sensors); i++)
   {
     pinMode(sensors[i], INPUT);
@@ -18,17 +19,19 @@ void setup() {
 }
 
 void loop() {
+  //If serial is not available then do nothing
   while (!Serial.available()) {}
-
   while (Serial.available()){
     
     if (Serial.available() > 0){
+      //Read the buffer until you reach \n
       serial_string = Serial.readStringUntil('\n');
     }
   }
   
   if (serial_string.length() >0)
   {
+    //What to do with different ids given
     switch (serial_string.toInt())
     {
     case 1:
@@ -41,7 +44,7 @@ void loop() {
     
 
     default:
-      Serial.print("Invalid device ID.");
+      Serial.print("Invalid device ID."); // if no match is found
     }
 
   }
