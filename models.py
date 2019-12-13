@@ -8,7 +8,7 @@ class Arduino:
                            bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
     
     def readBuffer(self):
-        time.sleep(2)
+        time.sleep(1)
         if(self.serial_connection.in_waiting > 0):
             while self.serial_connection.in_waiting > 0:
                 serialString = self.serial_connection.readline()
