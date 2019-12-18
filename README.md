@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/ees-project/badge/?version=latest)](https://ees-project.readthedocs.io/en/latest/?badge=latest)
+
 # EES Project 
 
 
