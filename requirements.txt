@@ -45,7 +45,7 @@ protobuf==3.0.0
 # pycairo==1.16.2
 pycodestyle==2.5.0
 # pycrypto==2.6.1
-pycups==1.9.73
+# pycups==1.9.73
 Pygments==2.5.2
 pygobject==3.27.1
 pylint==2.4.4
