@@ -9,6 +9,7 @@ imagesize==1.1.0
 iso8601==0.1.12
 Jinja2==2.10.3
 MarkupSafe==1.1.1
+mysql-connector==2.2.9
 packaging==19.2
 pkg-resources==0.0.0
 Pygments==2.5.2
