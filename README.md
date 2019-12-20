@@ -1,4 +1,5 @@
 [![Documentation Status](https://readthedocs.org/projects/ees-project/badge/?version=latest)](https://ees-project.readthedocs.io/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.com/geektype/EATON-EES-2019.svg?branch=master)](https://travis-ci.com/geektype/EATON-EES-2019)
 
 # EES Project 
 
