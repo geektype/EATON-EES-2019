@@ -80,6 +80,10 @@ def create_connection(h, u, p, d):
 
     return db_conn, cursor
 
-def storeReadings(readings, cur):
-    for reading in readings:
-        cur.execute("INSERT INTO readings (name, value, time) VALUES ('{na}', {value}, NOW());".format(na=reading[0], value=reading[1]))
+def storeReadings(readings, cur, time=None):
+    if time == None:
+        for reading in readings:
+            cur.execute("INSERT INTO readings (name, value, time) VALUES ('{na}', {value}, NOW());".format(na=reading[0], value=reading[1]))
+    else:
+        for reading in readings:
+            cur.execute("INSERT INTO test (name, value, time) VALUES ('{na}', {value}, '{time}');".format(na=reading[0], value=reading[1], time=time))
