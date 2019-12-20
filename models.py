@@ -1,5 +1,6 @@
 import serial
 import time
+import mysql.connector
 
 class Arduino:
     """ 
@@ -54,9 +55,9 @@ class Sensor:
                use class Arduino()
     """
 
-    def __init__(self, uid, host):
+    def __init__(self, uid, host, name="untitled"):
         self.uid = uid
-        
+        self.name = name
         self.last_reading = None
         self.host = host
     
@@ -67,3 +68,18 @@ class Sensor:
         self.last_reading = self.reading
         return self.reading
 
+
+def create_connection(h, u, p, d):
+    db_conn = mysql.connector.connect(
+        host = h,
+        user = u,
+        passwd = p,
+        database = d
+    )
+    cursor = db_conn.cursor()
+
+    return db_conn, cursor
+
+def storeReadings(readings, cur):
+    for reading in readings:
+        cur.execute("INSERT INTO readings (name, value, time) VALUES ('{na}', {value}, NOW());".format(na=reading[0], value=reading[1]))
