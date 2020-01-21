@@ -1,6 +1,6 @@
 import serial
 import time
-import mysql.connector
+import requests
 
 class Arduino:
     """ 
@@ -11,14 +11,14 @@ class Arduino:
     def __init__(self):
         #Initialise Connection
         #Change /dev/ttyACM0 to serial port arduino is connected to.
-        self.serial_connection = serial.Serial(port = "/dev/ttyACM0", baudrate=9600,
+        self.serial_connection = serial.Serial(port = "/dev/ttyUSB0", baudrate=9600,
                            bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
     
     def readBuffer(self):
         """
             Reads all the content stored in the serial buffer and returns content as a string
         """
-        time.sleep(1) #Delay to make sure every thing has been transfered.
+        time.sleep(3) #Delay to make sure every thing has been transfered.
         #Only do if the buffer is not empty
         if(self.serial_connection.in_waiting > 0):
             #Keep repeating until buffer is not empty so it can read all of the message.
@@ -69,21 +69,30 @@ class Sensor:
         return self.reading
 
 
-def create_connection(h, u, p, d):
-    db_conn = mysql.connector.connect(
-        host = h,
-        user = u,
-        passwd = p,
-        database = d
-    )
-    cursor = db_conn.cursor()
+# def create_connection(h, u, p, d):
+#     db_conn = mysql.connector.connect(
+#         host = h,
+#         user = u,
+#         passwd = p,
+#         database = d
+#     )
+#     cursor = db_conn.cursor()
 
-    return db_conn, cursor
+#     return db_conn, cursor
 
-def storeReadings(readings, cur, time=None):
-    if time == None:
-        for reading in readings:
-            cur.execute("INSERT INTO readings (name, value, time) VALUES ('{na}', {value}, NOW());".format(na=reading[0], value=reading[1]))
-    else:
-        for reading in readings:
-            cur.execute("INSERT INTO test (name, value, time) VALUES ('{na}', {value}, '{time}');".format(na=reading[0], value=reading[1], time=time))
+def storeReadings(readings, time=None):
+    url = "https://oq3xvtpr80.execute-api.eu-west-2.amazonaws.com/ees/store-reading"
+
+    for reading in readings:
+        req = requests.post(url, json={"sen_var": str(reading[0]), "value": float(reading[1])})
+        print("req response", req.status_code)
+    # if req.status_code == "200":
+    #     return True
+    # else:
+    #     print("something went wrong")
+    # if time == None:
+    #     for reading in readings:
+    #         cur.execute("INSERT INTO readings (name, value, time) VALUES ('{na}', {value}, NOW());".format(na=reading[0], value=reading[1]))
+    # else:
+    #     for reading in readings:
+    #         cur.execute("INSERT INTO test (name, value, time) VALUES ('{na}', {value}, '{time}');".format(na=reading[0], value=reading[1], time=time))

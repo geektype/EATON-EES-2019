@@ -1,15 +1,17 @@
 import mysql.connector
-from models import Sensor, Arduino, create_connection, storeReadings
+from models import Sensor, Arduino, storeReadings
 from cred import *
 import time
 
-db_conn, cursor = create_connection(HOST, USERNAME, PASSWORD, DATABASE)
+
 
 arduino = Arduino()
 
 ldrs = [] #This array stores all of the sensors
-ldrs.append(Sensor(1, arduino, "ldr1"))
-ldrs.append(Sensor(2, arduino, "ldr2"))
+ldrs.append(Sensor(1, arduino, "sensor1"))
+ldrs.append(Sensor(2, arduino, "sensor2"))
+ldrs.append(Sensor(3, arduino, "sensor3"))
+ldrs.append(Sensor(4, arduino, "sensor4"))
 
 
 time.sleep(0.75)
@@ -23,7 +25,6 @@ for sensor in ldrs:
 print(readings)
 
 
-storeReadings(readings, cursor)
+storeReadings(readings)
 
-db_conn.commit()
 arduino.closeConnection()
