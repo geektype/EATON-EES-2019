@@ -11,20 +11,25 @@ class Arduino:
     def __init__(self):
         #Initialise Connection
         #Change /dev/ttyACM0 to serial port arduino is connected to.
-        self.serial_connection = serial.Serial(port = "/dev/ttyUSB0", baudrate=9600,
+        self.serial_connection = serial.Serial(port = "/dev/ttyUSB0", baudrate=115200,
                            bytesize=8, timeout=2, stopbits=serial.STOPBITS_ONE)
     
     def readBuffer(self):
         """
             Reads all the content stored in the serial buffer and returns content as a string
         """
-        time.sleep(3) #Delay to make sure every thing has been transfered.
+        return_array = []
+        time.sleep(1) #Delay to make sure every thing has been transfered.
         #Only do if the buffer is not empty
-        if(self.serial_connection.in_waiting > 0):
+        if(self.serial_connection.in_waiting > 3):
             #Keep repeating until buffer is not empty so it can read all of the message.
             while self.serial_connection.in_waiting > 0:
                 serialString = self.serial_connection.readline()
-                return serialString.decode('ASCII') #Return the line formatted in ASCII
+                # return serialString.decode('ASCII') #Return the line formatted in ASCII
+                return_array.append(serialString.decode('ASCII').rstrip())
+        else:
+            print("shit")
+        return return_array
     
     def sendData(self, data):
         """

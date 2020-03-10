@@ -131,3 +131,4 @@ dmypy.json
 .vscode/c_cpp_properties.json
 cred.py
 .vscode/settings.json
+.aws/credentials
